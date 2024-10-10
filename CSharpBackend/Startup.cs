@@ -28,14 +28,14 @@ namespace ToDoList
                 app.UseDeveloperExceptionPage();
             }
 
+			app.UseCors("AllowAllOrigins");
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-			
-			app.UseCors("AllowAllOrigins");
         }
     }
 }

@@ -1,7 +1,6 @@
-
 <template>
   <div id="app">
-    <TaskList />
+    <TaskList/>
   </div>
 </template>
 
