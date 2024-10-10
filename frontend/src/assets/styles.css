@@ -9,12 +9,31 @@ body, html {
 }
 
 #app {
-    width: 90%;
-    max-width: 1200px;
-    padding: 20px;
+    width: 50vw;
+    height: 90vh;
     background-color: var(--dark-purple);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.content-wrapper {
+    margin: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Garante que a lista ocupe o espaço acima e o formulário fique abaixo */
+}
+
+ul.task-list-container {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1; /* Permite que a lista ocupe o espaço vertical disponível */
+    max-height: 70vh; /* Garante que a lista de tarefas ocupe o espaço restante */
+    overflow-y: auto;
 }
 
 ul {
@@ -24,7 +43,7 @@ ul {
 
 li {
     background-color: var(--light-purple);
-    padding: 15px;
+    padding: 10px;
     margin: 10px 0;
     border-radius: 8px;
     display: flex;
@@ -46,8 +65,9 @@ li {
 }
 
 form {
+    margin-top: auto; /* Garante que o formulário fique na parte inferior */
     display: flex;
-    flex-direction: column;
+    /*flex-direction: column;*/
     gap: 10px;
 }
 
