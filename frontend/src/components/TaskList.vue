@@ -4,9 +4,9 @@
     <ul>
       <li v-for="task in tasks" :key="task.id">
         <span :class="{ completed: task.completed }">
-          {{ task.name }} - {{ task.description }} (Prazo: {{ new Date(task.deadline).toLocaleDateString() }})
+          {{ task.name }} - {{ task.description }} (Deadline: {{ new Date(task.deadline).toLocaleDateString() }})
         </span>
-        <button @click="markAsComplete(task.id)">Complete</button>
+        <button @click="toggleCompletion(task.id)">{{ task.completed ? 'Uncomplete' : 'Complete' }}</button>
         <button @click="editTask(task)">Edit</button>
         <button @click="deleteTask(task.id)">Delete</button>
       </li>
@@ -17,6 +17,7 @@
       <input v-model="newTask.description" placeholder="Task description"/>
       <input type="date" v-model="newTask.deadline" placeholder="Deadline" required/>
       <button type="submit">{{ editingTask ? 'Edit Task' : 'Add Task' }}</button>
+      <button v-if="editingTask" type="button" @click="cancelEdit">Cancel</button>
     </form>
   </div>
 </template>
@@ -37,33 +38,45 @@ export default {
           .then((data) => (this.tasks = data));
     },
     addTask() {
-      const url = this.editingTask ? `http://localhost:5000/api/tasks/${this.editingTask.id}` : "http://localhost:5000/api/tasks";
-      const method = this.editingTask ? "PUT" : "POST";
+      if (!this.editingTask) {
+        fetch(`http://localhost:5000/api/tasks`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.newTask)
+        })
+            .then(response => response.json())
+            .then(data => {
+              console.log("Task added successfully");
+              this.fetchTasks();
+              this.resetForm();
+            })
+            .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+            });
+      } else {
+        fetch(`http://localhost:5000/api/tasks/${this.editingTask.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.newTask)
+        })
+            .then(response => {
+              if (response.status === 204) {
+                console.log("Task updated successfully");
+                this.fetchTasks();
+              } else {
+                return response.json();
+              }
+            })
+            .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+            });
+      }
 
-      fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(this.newTask)
-      })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok.');
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (this.editingTask) {
-              const index = this.tasks.findIndex(task => task.id === data.id);
-              this.tasks.splice(index, 1, data);
-              this.editingTask = null;
-            } else {
-              this.tasks.push(data);
-            }
-            this.newTask = {name: "", description: "", deadline: "", completed: false};
-          })
-          .catch((error) => console.error('There was a problem with the fetch operation:', error));
+      this.resetForm();
     },
     editTask(task) {
       this.newTask = {
@@ -75,6 +88,13 @@ export default {
       };
       this.editingTask = task;
     },
+    cancelEdit() {
+      this.resetForm();
+    },
+    resetForm() {
+      this.newTask = {name: "", description: "", deadline: "", completed: false};
+      this.editingTask = null;
+    },
     deleteTask(id) {
       fetch(`http://localhost:5000/api/tasks/${id}`, {method: "DELETE"})
           .then(response => {
@@ -85,20 +105,22 @@ export default {
           })
           .catch(error => console.error("There was a problem with the fetch operation:", error));
     },
-    markAsComplete(id) {
+    toggleCompletion(id) {
       fetch(`http://localhost:5000/api/tasks/${id}/complete`, {method: "PUT"})
           .then(response => {
-            if (!response.ok) {
-              throw new Error("Network response was not ok");
+            if (response.status === 204) {
+              console.log("Task completion status toggled.");
+              this.fetchTasks();
+            } else {
+              throw new Error("Failed to toggle task completion.");
             }
-            return this.fetchTasks();
           })
           .catch(error => console.error("There was a problem with the fetch operation:", error));
-    },
+    }
   },
   mounted() {
     this.fetchTasks();
-  },
+  }
 };
 </script>
 
@@ -107,4 +129,3 @@ export default {
   text-decoration: line-through;
 }
 </style>
-    

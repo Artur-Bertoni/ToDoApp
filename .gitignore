@@ -1,4 +1,5 @@
-/VueFrontend/node_modules/
-/CSharpBackend/obj/
-/CSharpBackend/bin/
+/frontend/node_modules/
+/backend/obj/
+/backend/bin/
 /.idea/
+/backend/Migrations/

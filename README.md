@@ -1,8 +1,18 @@
+Sim, você está absolutamente certo. A instalação da ferramenta `dotnet-ef` **deve acontecer antes** de rodar o comando para adicionar migrações. O fluxo correto seria:
+
+1. Primeiro, instalar a ferramenta `dotnet-ef` (se ela ainda não estiver instalada).
+2. Em seguida, rodar o comando de migração.
+
+Vou corrigir o fluxo no `README.md` para refletir essa ordem de operações corretamente.
+
+### **README.md Atualizado:**
+
+---
 
 # TO DO LIST Application
 
 ## Description
-This is a "To Do List" web application built using Vue.js for the frontend and ASP.NET Core (C#) for the backend. The backend uses SQL Server for storing task data.
+This is a "To Do List" web application built using Vue.js for the frontend and ASP.NET Core (C#) for the backend. The backend uses SQL Server for storing task data, which can now be managed using Docker for easier setup.
 
 ## Technologies Used
 - **Frontend**: Vue.js
@@ -12,22 +22,54 @@ This is a "To Do List" web application built using Vue.js for the frontend and A
 ## Prerequisites
 1. **Node.js** - Download and install from https://nodejs.org/en/download/
 2. **.NET Core SDK** - Download and install from https://dotnet.microsoft.com/download
-3. **SQL Server** - Download and install SQL Server Express or use Azure SQL Database
+3. **Docker** - Download and install from https://www.docker.com/products/docker-desktop (for running SQL Server locally via Docker)
 
 ## How to Run Locally
 
-### Backend (ASP.NET Core - C#)
-1. Navigate to the `CSharpBackend` folder:
+### 1. Backend (ASP.NET Core - C#)
+
+#### Setup with Docker (SQL Server)
+1. Ensure Docker is running on your machine.
+
+2. In the root of the project, where the `docker-compose.yml` file is located, start the SQL Server container:
     ```bash
-    cd CSharpBackend
+    docker-compose up -d
     ```
 
-2. Restore the dependencies:
+   This will start a SQL Server container on port `1433`. The container will run in the background.
+
+#### Installing `dotnet-ef` Locally
+The `dotnet-ef` tool is required to manage database migrations. Follow these steps to ensure it's installed:
+
+1. Navigate to the `backend` folder:
+    ```bash
+    cd backend
+    ```
+   
+2. Initialize the tool manifest (only needed the first time):
+    ```bash
+    dotnet new tool-manifest
+    ```
+
+3. Install the `dotnet-ef` tool:
+    ```bash
+    dotnet tool install dotnet-ef
+    ```
+
+#### Running the Backend
+Continue into the `backend` folder and run the following commands:
+
+1. Restore the dependencies:
     ```bash
     dotnet restore
     ```
 
-3. Apply the migrations to create the database and table for tasks:
+2. **Create the initial migration** (only needed the first time setting up the project):
+    ```bash
+    dotnet ef migrations add InitialCreate
+    ```
+
+3. **Apply the migration** to create/update the database schema:
     ```bash
     dotnet ef database update
     ```
@@ -37,12 +79,12 @@ This is a "To Do List" web application built using Vue.js for the frontend and A
     dotnet run
     ```
 
-   The backend will run on `http://localhost:5001`.
+   The backend will run on `http://localhost:5000`, and the database schema will be automatically updated if needed.
 
-### Frontend (Vue.js)
-1. Navigate to the `VueFrontend` folder:
+### 3. Frontend (Vue.js)
+1. Navigate to the `frontend` folder:
     ```bash
-    cd VueFrontend
+    cd frontend
     ```
 
 2. Install the Node.js dependencies:
@@ -57,9 +99,7 @@ This is a "To Do List" web application built using Vue.js for the frontend and A
 
    The frontend will be available at `http://localhost:8080`.
 
-### Database Setup
-- The backend is configured to use a local SQL Server instance. The default connection string is set to use LocalDB (`(localdb)\mssqllocaldb`). Ensure SQL Server is running locally.
-- The database and table for tasks will be created automatically when running `dotnet ef database update`.
-
-## Version Control
-- Ensure you commit your changes to a GitHub repository and share the link for evaluation.
+### 4. Database Setup
+- The backend is configured to use a SQL Server instance running in Docker.
+- The connection string is already set to connect to this local SQL Server instance on `localhost:1433` using the credentials defined in the `docker-compose.yml`.
+- Migrations are applied automatically when the application starts, and the database will be created/updated without needing to run additional commands.
