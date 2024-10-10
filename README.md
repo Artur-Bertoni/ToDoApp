@@ -1,14 +1,3 @@
-Sim, você está absolutamente certo. A instalação da ferramenta `dotnet-ef` **deve acontecer antes** de rodar o comando para adicionar migrações. O fluxo correto seria:
-
-1. Primeiro, instalar a ferramenta `dotnet-ef` (se ela ainda não estiver instalada).
-2. Em seguida, rodar o comando de migração.
-
-Vou corrigir o fluxo no `README.md` para refletir essa ordem de operações corretamente.
-
-### **README.md Atualizado:**
-
----
-
 # TO DO LIST Application
 
 ## Description

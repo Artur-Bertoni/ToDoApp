@@ -1,21 +1,25 @@
 <template>
   <div>
     <h1>To Do List</h1>
-    <ul>
-      <li v-for="task in tasks" :key="task.id">
-        <span :class="{ completed: task.completed }">
-          {{ task.name }} - {{ task.description }} (Deadline: {{ new Date(task.deadline).toLocaleDateString() }})
-        </span>
-        <button @click="toggleCompletion(task.id)">{{ task.completed ? 'Uncomplete' : 'Complete' }}</button>
-        <button @click="editTask(task)">Edit</button>
-        <button @click="deleteTask(task.id)">Delete</button>
+    <ul class="task-list-container">
+      <li v-for="task in tasks" :key="task.id" :class="{ 'completed-task': task.completed }">
+        <div class="task-container">
+          <div :class="['task-name', { completed: task.completed }]">{{ task.name }}</div>
+          <div :class="['task-description', { completed: task.completed }]">{{ task.description }}</div>
+          <div class="task-deadline">Deadline: {{ new Date(task.deadline).toLocaleDateString('pt-BR') }}</div>
+        </div>
+        <div class="button-group">
+          <button @click="toggleCompletion(task.id)">{{ task.completed ? 'Uncomplete' : 'Complete' }}</button>
+          <button @click="editTask(task)">Edit</button>
+          <button @click="deleteTask(task.id)" class="delete-button">Delete</button>
+        </div>
       </li>
     </ul>
     <br>
     <form @submit.prevent="addTask">
-      <input v-model="newTask.name" placeholder="Task name" required/>
-      <input v-model="newTask.description" placeholder="Task description"/>
-      <input type="date" v-model="newTask.deadline" placeholder="Deadline" required/>
+      <input v-model="newTask.name" placeholder="Task name" required />
+      <input v-model="newTask.description" placeholder="Task description" />
+      <input type="date" v-model="newTask.deadline" placeholder="Deadline" required />
       <button type="submit">{{ editingTask ? 'Edit Task' : 'Add Task' }}</button>
       <button v-if="editingTask" type="button" @click="cancelEdit">Cancel</button>
     </form>

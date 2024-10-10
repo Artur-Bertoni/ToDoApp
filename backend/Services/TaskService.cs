@@ -13,7 +13,10 @@ namespace ToDoList.Services {
         }
 
         public IEnumerable<ToDoTask> GetAllTasks() {
-            return _context.ToDoTasks.ToList();
+            return _context.ToDoTasks
+                .OrderBy(t => t.Completed)
+                .ThenBy(t => t.Deadline)
+                .ToList();
         }
 
         public ToDoTask GetTaskById(int id) {
