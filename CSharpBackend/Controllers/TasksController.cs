@@ -1,87 +1,66 @@
-
 using Microsoft.AspNetCore.Mvc;
+using CSharpBackend.Models;
+using CSharpBackend.Services;
 using System.Collections.Generic;
-using System.Linq;
-using System;
-using ToDoList.Models;
 
-namespace ToDoList.Controllers
+namespace CSharpBackend.Controllers
 {
-    [Route("/api/tasks")]
+    [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private static List<ToDoTask> tasks = new List<ToDoTask>
+        private readonly TaskService _taskService;
+
+        public TasksController(TaskService taskService)
         {
-            new ToDoTask { Id = 1, Name = "Sample Task", Description = "This is a sample task", Completed = false }
-        };
+            _taskService = taskService;
+        }
 
         [HttpGet]
-        public IActionResult GetTasks() {
+        public ActionResult<IEnumerable<ToDoTask>> GetTasks()
+        {
+            var tasks = _taskService.GetAllTasks();
             return Ok(tasks);
         }
 
-        [HttpPost]
-        public IActionResult CreateTask([FromBody] ToDoTask newTask)
+        [HttpGet("{id}")]
+        public ActionResult<ToDoTask> GetTask(int id)
         {
-            newTask.Id = tasks.Max(t => t.Id) + 1;
-            tasks.Add(newTask);
+            var task = _taskService.GetTaskById(id);
 
-            Console.WriteLine($"Task added - Name: {newTask.Name}, Description: {newTask.Description}, Deadline: {newTask.Deadline}");
+            if (task == null)
+            {
+                return NotFound();
+            }
 
-            return Ok(newTask);
+            return Ok(task);
+        }
+
+        [HttpPost]
+        public ActionResult<ToDoTask> PostTask(ToDoTask task)
+        {
+            _taskService.AddTask(task);
+            return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult PutTask(int id, ToDoTask task)
+        {
+            if (id != task.Id)
+            {
+                return BadRequest();
+            }
+
+            _taskService.UpdateTask(task);
+
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteTask(int id)
         {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null) return NotFound();
-            tasks.Remove(task);
-            return Ok();
-        }
-
-        [HttpPut("{id}/complete")]
-        public IActionResult CompleteTask(int id)
-        {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null) return NotFound();
-            task.Completed = true;
-            return Ok();
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetTaskById(int id)
-        {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null)
-            {
-                return NotFound();
-            }
-            return Ok(task);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UpdateTask(int id, [FromBody] ToDoTask updatedTask)
-        {
-            if (id != updatedTask.Id)
-            {
-                return BadRequest();
-            }
-
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-
-            if (task == null)
-            {
-                return NotFound();
-            }
-
-            task.Name = updatedTask.Name;
-            task.Description = updatedTask.Description;
-            task.Deadline = updatedTask.Deadline;
-
-            return Ok(task);
+            _taskService.DeleteTask(id);
+            return NoContent();
         }
     }
 }
-    
