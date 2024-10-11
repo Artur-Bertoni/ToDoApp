@@ -17,7 +17,7 @@
               <div :class="['task-name', { completed: task.completed }]">{{ task.name }}</div>
               <div :class="['task-description', { completed: task.completed }]">{{ task.description }}</div>
               <div
-                  :class="['task-deadline', { 'past-deadline': !task.completed && new Date(task.deadline) < new Date(), 'completed': task.completed }]">
+                  :class="['task-deadline', { 'past-deadline': !task.completed && new Date(task.deadline) < new Date() && task.deadline, 'completed': task.completed }]">
                 Deadline: {{ task.deadline ? new Date(task.deadline).toLocaleDateString('pt-BR') : 'not specified' }}
               </div>
             </div>
