@@ -1,3 +1,15 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+h1 {
+    color: var(--light-blue);
+    margin: 0;
+}
+
 body, html {
     height: 100%;
     display: flex;
@@ -14,9 +26,8 @@ body, html {
     background-color: var(--dark-purple);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-content: start;
+    overflow-y: hidden;
 }
 
 .content-wrapper {
@@ -31,9 +42,7 @@ ul.task-list-container {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1;
-    max-height: 70vh;
-    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 ul {
@@ -43,9 +52,8 @@ ul {
 
 li {
     background-color: var(--light-purple);
-    padding: 10px;
     margin: 10px 0;
-    border-radius: 8px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -53,6 +61,9 @@ li {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    min-height: 100px;
+    padding: 15px;
+    position: relative;
 }
 
 .completed {
@@ -61,13 +72,82 @@ li {
 }
 
 .completed-task {
-    background-color: var(--darker-purple);
+    filter: brightness(0.5);
 }
 
 form {
     margin-top: auto;
     display: flex;
     gap: 10px;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.popup form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.popup input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--light-grey);
+    font-size: 16px;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.popup-buttons button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+    color: var(--white);
+    cursor: pointer;
+    background-color: var(--orange);
+}
+
+.popup-buttons button:hover {
+    filter: brightness(0.9);
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+.add-task-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
 input, button {
@@ -78,12 +158,11 @@ input, button {
 }
 
 .button-group {
+    position: absolute;
+    bottom: 1px;
+    right: 10px;
     display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 300px;
-    margin-top: 10px;
-    align-self: center;
+    gap: 10px;
 }
 
 button {
@@ -94,21 +173,68 @@ button {
     color: var(--white);
     cursor: pointer;
     background-color: var(--orange);
-    flex-grow: 1;
     margin: 0 5px;
     text-align: center;
 }
 
 button:hover {
-    background-color: var(--dark-orange);
+    filter: brightness(0.8);
+    transform: scale(1.1);
+    transition: all 0.3s ease;
 }
 
-.delete-button {
+.complete-checkbox {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--orange);
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.complete-checkbox:hover {
+    filter: brightness(0.9);
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+}
+
+.complete-checkbox:checked {
     background-color: var(--orange);
 }
 
-.delete-button:hover {
-    background-color: var(--dark-orange);
+.complete-checkbox:checked::before {
+    content: "✔";
+    color: white;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.icon-image {
+    width: 20px;
+    height: 20px;
+}
+
+.delete-button .icon-image {
+    filter: invert(28%) sepia(90%) saturate(5400%) hue-rotate(358deg) brightness(100%) contrast(101%);
+}
+
+.add-task-image {
+    width: 50px;
+    height: 50px;
+    filter: invert(85%) sepia(7%) saturate(2686%) hue-rotate(171deg) brightness(100%) contrast(106%);
 }
 
 input[type="text"], input[type="date"] {
@@ -118,15 +244,19 @@ input[type="text"], input[type="date"] {
 
 .task-container {
     display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 10px;
+    align-items: center;
+}
+
+.task-details {
+    flex-grow: 1;
+    margin-left: 15px;
+    max-width: calc(100% - 100px);
 }
 
 .task-list-container {
-    max-height: 400px;
+    max-height: 80vh;
     overflow-y: auto;
-    margin-bottom: 20px;
+    margin-bottom: 30vh;
     padding-right: 10px;
 }
 
@@ -145,17 +275,18 @@ input[type="text"], input[type="date"] {
 }
 
 .task-list-container::-webkit-scrollbar-thumb:hover {
-    background-color: var(--dark-orange);
+    background-color: var(--orange);
+    transition: all 0.3s ease;
 }
 
 .task-name {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
     color: var(--light-blue);
     margin-bottom: 5px;
     white-space: normal;
     overflow-wrap: break-word;
-    width: 100%;
+    max-width: 40vw;
 }
 
 .task-description {
@@ -164,16 +295,18 @@ input[type="text"], input[type="date"] {
     margin-bottom: 5px;
     white-space: normal;
     overflow-wrap: break-word;
-    width: 100%;
+    max-width: 40vw;
 }
 
 .task-deadline {
     font-size: 14px;
     color: var(--white);
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
-h1 {
-    color: var(--light-blue);
+.past-deadline {
+    color: var(--red);
 }
 
 :root {
@@ -182,8 +315,7 @@ h1 {
     --dark-grey: #b2b2b2;
     --light-purple: #3f4c80;
     --dark-purple: #392e66;
-    --darker-purple: #2c3b5e;
     --orange: #fd832e;
-    --dark-orange: #d06c26;
     --light-blue: #52fdfe;
+    --red: red
 }
