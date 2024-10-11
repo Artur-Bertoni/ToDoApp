@@ -58,7 +58,7 @@ If you need to create new migrations (e.g., after modifying the data model), fol
    
 ## Frontend Development
 
-If you need to make changes to the frontend and want to run the development server (with hot-reloading), you can use the following steps:
+If you need to make changes to the frontend and want to run the development server (with hot-reloading), you can use the following steps, but keep in mind that this will only work if you got `Node.js` and `npm` installed in your machine:
 
 1. Navigate to the `frontend` folder:
    ```bash
