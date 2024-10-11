@@ -253,7 +253,6 @@ input[type="text"], input[type="date"] {
 .task-details {
     flex-grow: 1;
     margin-left: 15px;
-    max-width: calc(100% - 100px);
 }
 
 .task-list-container {
@@ -291,7 +290,7 @@ input[type="text"], input[type="date"] {
     margin-bottom: 5px;
     white-space: normal;
     overflow-wrap: break-word;
-    max-width: 40vw;
+    word-break: normal;
 }
 
 .task-description {
@@ -300,7 +299,7 @@ input[type="text"], input[type="date"] {
     margin-bottom: 5px;
     white-space: normal;
     overflow-wrap: break-word;
-    max-width: 40vw;
+    word-break: normal;
 }
 
 .task-deadline {

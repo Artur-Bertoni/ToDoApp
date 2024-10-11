@@ -1,50 +1,94 @@
 # TO DO LIST Application
 
-## Overview
-This is a web application for managing tasks efficiently. Users can add, edit, remove, and mark tasks as completed, as well as assign deadlines. The application uses **Vue.js** for the frontend and **ASP.NET Core (C#)** for the backend. Task data is stored in **SQL Server**, and everything (frontend, backend, and database) is managed via **Docker** for easy setup.
+## Description
+This is a "To Do List" web application built using Vue.js for the frontend and ASP.NET Core (C#) for the backend. The backend uses SQL Server for storing task data, which can now be managed using Docker for easier setup.
 
 ## Technologies Used
 - **Frontend**: Vue.js
 - **Backend**: ASP.NET Core (C#)
-- **Database**: SQL Server (via Entity Framework Core)
-- **Containerization**: Docker (orchestrating SQL Server, backend, and frontend)
+- **Database**: SQL Server (using Entity Framework Core)
 
 ## Prerequisites
-Ensure you have **Docker** installed on your machine to run the entire application locally:
-1. **Docker** - [Download Docker](https://www.docker.com/products/docker-desktop)
+1. **Node.js** - Download and install from https://nodejs.org/en/download/
+2. **.NET Core SDK** - Download and install from https://dotnet.microsoft.com/download
+3. **Docker** - Download and install from https://www.docker.com/products/docker-desktop (for running SQL Server locally via Docker)
 
-## Running the Project Locally
+## How to Run Locally
 
-All services (frontend, backend, and SQL Server database) will be handled by Docker. You only need to run the `docker-compose` command, and Docker will take care of building and running everything.
+### 1. Backend (ASP.NET Core - C#)
 
-### Steps:
-1. Clone the repository and navigate to the project directory.
-2. Ensure Docker is running on your machine.
-3. Run the following command to build and start the entire project:
+#### Setup with Docker (SQL Server)
+1. Ensure Docker is running on your machine.
+
+2. In the root of the project, where the `docker-compose.yml` file is located, start the SQL Server container:
     ```bash
-    docker-compose up --build
+    docker-compose up -d
     ```
-   This command will:
-   - Build and run the **SQL Server** database container (on port `1433`).
-   - Build and run the **backend** (ASP.NET Core) on `http://localhost:5000`.
-   - Build and serve the **frontend** (Vue.js) on `http://localhost:8080`.
 
-### What Happens Automatically:
-- **SQL Server**: A container with SQL Server will be started on port `1433`.
-- **Backend**:
-   - The backend will automatically restore dependencies.
-   - Any database migrations will be automatically applied to set up the database schema.
-   - The backend will run on `http://localhost:5000`.
-- **Frontend**: The frontend server will be built and served via an NGINX container, available at `http://localhost:8080`.
+   This will start a SQL Server container on port `1433`. The container will run in the background.
 
-### 4. Shutting Down the Application
-To stop and remove the containers, you can run:
-```bash
-docker-compose down
-```
+#### Installing `dotnet-ef` Locally
+The `dotnet-ef` tool is required to manage database migrations. Follow these steps to ensure it's installed:
 
----
+1. Navigate to the `backend` folder:
+    ```bash
+    cd backend
+    ```
+   
+2. Initialize the tool manifest (only needed the first time):
+    ```bash
+    dotnet new tool-manifest
+    ```
 
-### Additional Information:
-- No manual steps are needed to install Node.js, .NET SDK, or manage database migrations.
-- Everything (dependencies, migrations, builds) is handled by Docker during the `docker-compose up` process.
+3. Install the `dotnet-ef` tool:
+    ```bash
+    dotnet tool install dotnet-ef
+    ```
+
+#### Running the Backend
+Continue into the `backend` folder and run the following commands:
+
+1. Restore the dependencies:
+    ```bash
+    dotnet restore
+    ```
+
+2. **Create the initial migration** (only needed the first time setting up the project):
+    ```bash
+    dotnet ef migrations add InitialCreate
+    ```
+
+3. **Apply the migration** to create/update the database schema:
+    ```bash
+    dotnet ef database update
+    ```
+
+4. Run the backend server:
+    ```bash
+    dotnet run
+    ```
+
+   The backend will run on `http://localhost:5000`, and the database schema will be automatically updated if needed.
+
+### 3. Frontend (Vue.js)
+1. Navigate to the `frontend` folder:
+    ```bash
+    cd frontend
+    ```
+
+2. Install the Node.js dependencies:
+    ```bash
+    npm install
+    ```
+
+3. Run the frontend development server:
+    ```bash
+    npm run serve
+    ```
+
+   The frontend will be available at `http://localhost:8080`.
+
+### 4. Database Setup
+- The backend is configured to use a SQL Server instance running in Docker.
+- The connection string is already set to connect to this local SQL Server instance on `localhost:1433` using the credentials defined in the `docker-compose.yml`.
+- Migrations are applied automatically when the application starts, and the database will be created/updated without needing to run additional commands.

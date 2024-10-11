@@ -6,41 +6,18 @@ services:
     container_name: sqlserver
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourPassword123
+      - SA_PASSWORD=ToDoAppDbPass1
     ports:
       - "1433:1433"
     networks:
-      - todo-app-network
+      - todonet
     volumes:
-      - sqlvolume:/var/opt/mssql
-
-  backend:
-    build: ./backend
-    container_name: todo-backend
-    ports:
-      - "5000:5000"
-    networks:
-      - todo-app-network
-    depends_on:
-      - sqlserver
-    environment:
-      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ToDoApp;User=sa;Password=YourPassword123;
-
-  frontend:
-    build: ./frontend
-    container_name: todo-frontend
-    ports:
-      - "8080:8080"
-    networks:
-      - todo-app-network
-    depends_on:
-      - backend
+      - sqlserverdata:/var/opt/mssql
 
 networks:
-  todo-app-network:
+  todonet:
     driver: bridge
 
 volumes:
-  sqlvolume:
+  sqlserverdata:
     driver: local
-
