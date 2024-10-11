@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="content-wrapper">
-      <h1>To Do List</h1>
+      <h1>TO DO LIST</h1>
       <ul class="task-list-container">
         <li v-for="task in tasks" :key="task.id" :class="{ 'completed-task': task.completed }">
           <div class="task-container">
@@ -17,9 +17,13 @@
         </li>
       </ul>
       <form @submit.prevent="addTask">
+<!--        TODO adicionar validação para data inválida (ex:11/11/111111111)-->
+<!--        TODO adicionar responsividade para campos de add task-->
+<!--        TODO substituir botões de add, complete, edit e delete por ícones-->
+<!--        TODO edit e add devem abrir um pop-up-->
         <input v-model="newTask.name" placeholder="Task name" required />
-        <input v-model="newTask.description" placeholder="Task description" />
-        <input type="date" v-model="newTask.deadline" placeholder="Deadline" required />
+        <input v-model="newTask.description" placeholder="Task description" required />
+        <input type="date" v-model="newTask.deadline" placeholder="Deadline" />
         <button type="submit">{{ editingTask ? 'Edit Task' : 'Add Task' }}</button>
         <button v-if="editingTask" type="button" @click="cancelEdit">Cancel</button>
       </form>

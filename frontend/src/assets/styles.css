@@ -24,15 +24,15 @@ body, html {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Garante que a lista ocupe o espaço acima e o formulário fique abaixo */
+    justify-content: space-between;
 }
 
 ul.task-list-container {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    flex-grow: 1; /* Permite que a lista ocupe o espaço vertical disponível */
-    max-height: 70vh; /* Garante que a lista de tarefas ocupe o espaço restante */
+    flex-grow: 1;
+    max-height: 70vh;
     overflow-y: auto;
 }
 
@@ -65,9 +65,8 @@ li {
 }
 
 form {
-    margin-top: auto; /* Garante que o formulário fique na parte inferior */
+    margin-top: auto;
     display: flex;
-    /*flex-direction: column;*/
     gap: 10px;
 }
 
@@ -170,7 +169,7 @@ input[type="text"], input[type="date"] {
 
 .task-deadline {
     font-size: 14px;
-    color: var(--dark-grey);
+    color: var(--white);
 }
 
 h1 {
