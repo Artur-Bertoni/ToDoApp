@@ -49,9 +49,10 @@ export default {
                 })
                 .catch((error) => console.error('Problema com a operação:', error));
         } else {
+            taskData.id = this.editingTask.id;
             fetch(`${API_BASE_URL}${this.editingTask.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(taskData),
             })
                 .then(() => {
@@ -75,13 +76,13 @@ export default {
     },
 
     deleteTask(id) {
-        fetch(`${API_BASE_URL}${id}`, { method: 'DELETE' })
+        fetch(`${API_BASE_URL}${id}`, {method: 'DELETE'})
             .then(() => this.fetchTasks())
             .catch((error) => console.error('Problema com a operação:', error));
     },
 
     toggleCompletion(id) {
-        fetch(`${API_BASE_URL}${id}/complete`, { method: 'PUT' })
+        fetch(`${API_BASE_URL}${id}/complete`, {method: 'PUT'})
             .then(() => this.fetchTasks())
             .catch((error) => console.error('Problema com a operação:', error));
     },
@@ -97,7 +98,7 @@ export default {
     },
 
     resetForm() {
-        this.newTask = { name: "", description: "", deadline: "", completed: false };
+        this.newTask = {name: "", description: "", deadline: "", completed: false};
         this.editingTask = null;
     },
 

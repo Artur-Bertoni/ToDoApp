@@ -37,7 +37,6 @@ namespace ToDoList.Controllers {
 
         [HttpPut("{id}")]
         public IActionResult PutTask(int id, ToDoTask task) {
-
             if (id != task.Id) {
                 return BadRequest("Task ID mismatch.");
             }
