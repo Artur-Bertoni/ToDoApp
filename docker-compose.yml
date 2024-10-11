@@ -10,14 +10,36 @@ services:
     ports:
       - "1433:1433"
     networks:
-      - todonet
+      - todo-app-network
     volumes:
-      - sqlserverdata:/var/opt/mssql
+      - sqlvolume:/var/opt/mssql
+
+  backend:
+    build: ./backend
+    container_name: todo-backend
+    ports:
+      - "5000:5000"
+    networks:
+      - todo-app-network
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=ToDoAppDb;User=sa;Password=ToDoAppDbPass1;
+    depends_on:
+      - sqlserver
+
+  frontend:
+    build: ./frontend
+    container_name: todo-frontend
+    ports:
+      - "80:80"
+    networks:
+      - todo-app-network
+    depends_on:
+      - backend
 
 networks:
-  todonet:
+  todo-app-network:
     driver: bridge
 
 volumes:
-  sqlserverdata:
+  sqlvolume:
     driver: local
