@@ -17,9 +17,14 @@
               <div :class="['task-name', { completed: task.completed }]">{{ task.name }}</div>
               <div :class="['task-description', { completed: task.completed }]">{{ task.description }}</div>
               <div
-                  :class="['task-deadline', { 'past-deadline': new Date(task.deadline) < new Date() }, { completed: task.completed }]">
-                Deadline: {{ new Date(task.deadline).toLocaleDateString('pt-BR') }}
+                  :class="{
+                    'task-deadline': true,
+                    'past-deadline': !task.completed && new Date(task.deadline) < new Date(),
+                    'completed': task.completed}">
+                Deadline: {{ task.deadline ? new Date(task.deadline).toLocaleDateString('pt-BR') : 'not specified' }}
               </div>
+
+
             </div>
           </div>
           <div class="button-group">
@@ -39,7 +44,7 @@
           <form @submit.prevent="addTask">
             <input v-model="newTask.name" placeholder="Task name" required/>
             <input v-model="newTask.description" placeholder="Task description" required/>
-            <input type="date" v-model="newTask.deadline" @input="validateDateLength" />
+            <input type="date" v-model="newTask.deadline" @input="validateDateLength"/>
             <div class="popup-buttons">
               <button type="submit">{{ editingTask ? 'Save Task' : 'Add Task' }}</button>
               <button type="button" @click="closePopup">Cancel</button>
@@ -70,13 +75,25 @@ export default {
           .then((data) => (this.tasks = data));
     },
     addTask() {
+      const taskData = {
+        name: this.newTask.name,
+        description: this.newTask.description,
+        completed: this.newTask.completed
+      };
+      if (this.newTask.deadline) {
+        taskData.deadline = this.newTask.deadline;
+      }
+      if (this.newTask.deadline && this.newTask.deadline.split('-')[0].length > 4) {
+        alert("Data inválida: o ano não pode ter mais de 4 dígitos.");
+        return;
+      }
       if (!this.editingTask) {
         fetch(`http://localhost:5000/api/tasks`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(this.newTask)
+          body: JSON.stringify(taskData)
         })
             .then(response => response.json())
             .then(data => {
@@ -93,7 +110,7 @@ export default {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(this.newTask)
+          body: JSON.stringify(taskData)
         })
             .then(response => {
               if (response.status === 204) {
@@ -107,7 +124,6 @@ export default {
               console.error('There was a problem with the fetch operation:', error);
             });
       }
-
       this.closePopup();
     },
     editTask(task) {
