@@ -5,6 +5,8 @@ COPY . ./
 RUN dotnet restore
 RUN dotnet tool install --global dotnet-ef --version 8.0.10
 
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 RUN dotnet build -c Release -o /app/build
 RUN dotnet publish -c Release -o /app/publish
 
