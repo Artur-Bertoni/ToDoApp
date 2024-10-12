@@ -82,9 +82,14 @@ export default {
     },
 
     toggleCompletion(id) {
+        const task = this.tasks.find(t => t.id === id);
+
         fetch(`${API_BASE_URL}${id}/complete`, {method: 'PUT'})
             .then(() => this.fetchTasks())
             .catch((error) => console.error('Problema com a operação:', error));
+        if (!task.completed) {
+            this.showCompletionPopup();
+        }
     },
 
     openPopup() {
@@ -109,5 +114,36 @@ export default {
             event.target.value = '';
             alert("O ano não pode ter mais de 4 dígitos.");
         }
+    },
+
+    showCompletionPopup() {
+        this.popupVisible = true;
+        this.popupProgress = 100;
+        this.timeRemaining = 5000;
+
+        this.popupInterval = setInterval(() => {
+            if (!this.paused && this.timeRemaining > 0) {
+                this.timeRemaining -= 100;
+                this.popupProgress = (this.timeRemaining / 5000) * 100;
+            }
+
+            if (this.timeRemaining <= 0) {
+                this.hideCompletionPopup();
+            }
+        }, 100);
+    },
+
+    hideCompletionPopup() {
+        clearInterval(this.popupInterval);
+        this.popupVisible = false;
+        this.popupProgress = 100;
+    },
+
+    pausePopup() {
+        this.paused = true;
+    },
+
+    resumePopup() {
+        this.paused = false;
     },
 };

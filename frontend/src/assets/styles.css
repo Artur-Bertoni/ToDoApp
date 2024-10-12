@@ -121,6 +121,7 @@ form {
     border-radius: 6px;
     border: 1px solid var(--light-grey);
     font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .popup-buttons {
@@ -144,6 +145,31 @@ form {
     filter: brightness(0.9);
     transform: scale(1.05);
     transition: all 0.3s ease;
+}
+
+.completion-popup {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--white);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+
+.progress-bar {
+    height: 4px;
+    background-color: var(--orange);
+    margin-top: 5px;
+    width: 100%;
+    transition: width 0.1s linear;
 }
 
 .add-task-button {

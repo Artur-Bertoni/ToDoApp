@@ -42,7 +42,7 @@ The frontend will be available at [`http://localhost:8080`](http://localhost:808
 
 - **Edit Task**: To edit an existing task, click the [pencil icon (✏️)](./src/assets/img/edit-icon.png) next to the task. A pop-up will appear where you can modify the title, description, and deadline (the rules for adding a task are also applied for editing).
 
-- **Complete Task**: To mark a task as complete, simply check the box next to it. Completed tasks will be moved to the bottom of the list.
+- **Complete Task**: To mark a task as complete, simply check the box next to it. Completed tasks will be moved to the bottom of the list, and a popup will appear saying "Task Completed! Congratulations! 🎉" with a progress bar indicating how long the popup will remain visible. The popup countdown will pause if you hover over it.
 
 - **Delete Task**: To delete a task, click the [trash can icon (🗑️)](./src/assets/img/delete-icon.png) next to the task.
 

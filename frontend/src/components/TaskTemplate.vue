@@ -47,12 +47,18 @@
           </form>
         </div>
       </div>
+
+      <div v-if="popupVisible" class="completion-popup" @mouseenter="$emit('pausePopup')"
+           @mouseleave="$emit('resumePopup')">
+        <span>Task Completed! Congratulations! 🎉</span>
+        <div class="progress-bar" :style="{ width: popupProgress + '%' }"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['tasks', 'showPopup', 'editingTask', 'newTask'],
+  props: ['tasks', 'showPopup', 'editingTask', 'newTask', 'popupVisible', 'popupProgress'],
 };
 </script>
