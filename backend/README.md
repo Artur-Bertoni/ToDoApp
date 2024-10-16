@@ -70,5 +70,8 @@ The API is available at [`http://localhost:5000/api`](http://localhost:5000/api)
       }
       ```
 
+- **PUT** `/tasks/{id}/complete`
+    - Toggles an existing task's "Completed" status by its ID (if current is true, turns to false, as well as the opposite).
+
 - **DELETE** `/tasks/{id}`
     - Deletes a task by its ID.
